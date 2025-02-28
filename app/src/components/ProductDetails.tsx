@@ -2,12 +2,20 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 
 interface ProductDetailProps {
-  product: { id: number; name: string; image: string; price: string } | null;
+  product: { id: number; name: string; price: string; stock: number } | null;
   onClose: () => void;
   onAddToCart: () => void;
+  onOrderInventory?: () => void; // Opcional
+  onSearchBranch?: () => void; // Opcional
 }
 
-const ProductDetail: React.FC<ProductDetailProps> = ({ product, onClose, onAddToCart }) => {
+const ProductDetail: React.FC<ProductDetailProps> = ({
+  product,
+  onClose,
+  onAddToCart,
+  onOrderInventory,
+  onSearchBranch,
+}) => {
   if (!product) return null;
 
   return (
@@ -19,15 +27,33 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onClose, onAddTo
         >
           <FaTimes />
         </button>
-        <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded" />
         <h2 className="text-2xl font-bold mt-2">{product.name}</h2>
         <p className="text-gray-600 mt-2">{product.price}</p>
-        <button 
-          onClick={onAddToCart}
-          className="bg-blue-500 text-white px-4 py-2 mt-4 rounded"
-        >
-          Agregar al carrito
-        </button>
+        <p className="text-gray-600 mt-2">Stock disponible: {product.stock}</p>
+
+        <div className="mt-4 space-y-2">
+          <button 
+            onClick={onAddToCart}
+            className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+            disabled={product.stock === 0}
+          >
+            {product.stock > 0 ? "Agregar al carrito" : "Sin stock"}
+          </button>
+
+          <button 
+            onClick={onOrderInventory}
+            className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+          >
+            Ordenar al inventario
+          </button>
+
+          <button 
+            onClick={onSearchBranch}
+            className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+          >
+            Buscar en otra sucursal
+          </button>
+        </div>
       </div>
     </div>
   );

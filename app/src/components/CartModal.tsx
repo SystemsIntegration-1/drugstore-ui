@@ -2,30 +2,44 @@ import React from "react";
 import { FaTimes, FaRegTrashAlt } from "react-icons/fa";
 
 interface CartModalProps {
-  cart: { id: number; name: string; image: string; price: string; quantity: number }[];
+  cart: {
+    id: number;
+    name: string;
+    price: string;
+    quantity: number;
+  }[];
   onClose: () => void;
   onUpdateCart: (id: number, quantity: number) => void;
   onRemoveFromCart: (id: number) => void;
 }
 
-const CartModal: React.FC<CartModalProps> = ({ cart, onClose, onUpdateCart, onRemoveFromCart }) => {
+const CartModal: React.FC<CartModalProps> = ({
+  cart,
+  onClose,
+  onUpdateCart,
+  onRemoveFromCart,
+}) => {
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded shadow-lg w-96 relative">
-        <button 
-          onClick={onClose} 
+        <button
+          onClick={onClose}
           className="absolute top-2 right-2 text-xl text-gray-700 hover:text-black"
         >
           <FaTimes />
         </button>
         <h2 className="text-2xl font-bold text-center">Carrito de Compras</h2>
         {cart.length === 0 ? (
-          <p className="text-gray-600 mt-2 text-center">El carrito está vacío.</p>
+          <p className="text-gray-600 mt-2 text-center">
+            El carrito está vacío.
+          </p>
         ) : (
           <ul className="mt-4">
             {cart.map((item) => (
-              <li key={item.id} className="flex items-center space-x-4 border-b py-2">
-                <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
+              <li
+                key={item.id}
+                className="flex items-center space-x-4 border-b py-2"
+              >
                 <div>
                   <h3 className="font-bold">{item.name}</h3>
                   <p className="text-gray-600">{item.price}</p>
@@ -56,6 +70,9 @@ const CartModal: React.FC<CartModalProps> = ({ cart, onClose, onUpdateCart, onRe
             ))}
           </ul>
         )}
+        <button className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+          Comprar
+        </button>
       </div>
     </div>
   );
