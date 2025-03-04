@@ -1,20 +1,57 @@
-"use client";
+"use client"; // Añadir esta línea al principio del archivo
 
 import { useState } from "react";
 import Header from "./src/components/Header";
 import ProductList from "./src/components/ProductList";
 import ProductDetail from "./src/components/ProductDetails";
 import CartModal from "./src/components/CartModal";
-import { mockProducts } from "./src/data/products";
-import { FiSearch } from "react-icons/fi";
+import SearchBar from "./src/components/SearchBar"; // Importamos el componente SearchBar
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  description: string;
+  category: string;
+  warehouseLocation: string;
+  sharedId: string;
+}
 
 export default function Home() {
-  const [search, setSearch] = useState<string>("");
-  const [selectedProduct, setSelectedProduct] = useState<{ id: number; name: string; price: string; stock: number } | null>(null);
-  const [cart, setCart] = useState<{ id: number; name: string; price: string; quantity: number }[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [cart, setCart] = useState<{ id: string; name: string; price: number; quantity: number }[]>([]);
   const [showCart, setShowCart] = useState<boolean>(false);
 
-  const addToCart = (product: { id: number; name: string; price: string }) => {
+  // Función para buscar productos desde la API
+  const searchProducts = (query: string) => {
+    if (query.trim() === "") {
+      setProducts([]); 
+      return;
+    }
+
+    fetch(`http://localhost:5027/api/products/search/${query}`, {
+      method: "GET",
+      headers: {
+        "Accept": "*/*",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setProducts(data); 
+        } else {
+          setProducts([]); 
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+        setProducts([]); 
+      });
+  };
+
+  const addToCart = (product: Product) => {
     const existingProduct = cart.find((item) => item.id === product.id);
     if (existingProduct) {
       setCart(cart.map((item) =>
@@ -25,43 +62,30 @@ export default function Home() {
     }
   };
 
-  const updateCartQuantity = (id: number, quantity: number) => {
+  const updateCartQuantity = (id: string, quantity: number) => {
     setCart(cart.map((item) =>
       item.id === id ? { ...item, quantity } : item
     ));
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCart(cart.filter((item) => item.id !== id));
   };
-
-  // Filtrar productos basados en la búsqueda
-  const filteredProducts = mockProducts.filter(product =>
-    product.name.toLowerCase().includes(search.toLowerCase())
-  );
 
   return (
     <div className="min-h-screen pt-16">
       {/* Header */}
-      <Header cart={cart} onCartClick={() => setShowCart(true)} />
+      <Header cart={cart} onCartClick={() => setShowCart(true)}  />
 
-      {/* Buscador debajo del header */}
-      <div className="flex justify-center mt-4">
-        <div className="relative w-full max-w-xl">
-          <input
-            type="text"
-            placeholder="¿Qué estás buscando?"
-            className="w-full px-4 py-2 rounded-md border focus:outline-none"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <FiSearch className="absolute right-3 top-3 text-gray-500 text-xl" />
-        </div>
-      </div>
+      {/* Componente de búsqueda */}
+      <SearchBar onSearch={searchProducts} />
 
       {/* Centrado de los productos */}
       <div className="flex justify-center mt-8">
-        <ProductList search={search} products={filteredProducts} onSelectProduct={(product) => setSelectedProduct(product)} />
+        <ProductList
+          products={products}
+          onSelectProduct={(product) => setSelectedProduct(product)} 
+        />
       </div>
 
       {selectedProduct && (

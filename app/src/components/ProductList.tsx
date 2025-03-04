@@ -1,28 +1,37 @@
 import React from "react";
 import ProductCard from "./ProductCard";
 
-interface ProductListProps {
-  search: string;
-  products: { id: number; name: string; price: string }[];
-  onSelectProduct: (product: { id: number; name: string; price: string }) => void;
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  description: string;
+  category: string;
+  warehouseLocation: string;
+  sharedId: string;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ search, products, onSelectProduct }) => {
+interface ProductListProps {
+  products: Product[];
+  onSelectProduct: (product: Product) => void; // Esta función espera un Product con todas las propiedades
+}
+
+const ProductList: React.FC<ProductListProps> = ({ products, onSelectProduct }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {products.length > 0 ? (
-        products.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            price={product.price}
-            onClick={() => onSelectProduct(product)}
-          />
-        ))
-      ) : (
-        <p className="col-span-full text-center text-lg text-gray-500">No se encontraron productos.</p>
-      )}
+    <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {
+          products.map((product) => (
+            <ProductCard
+              key={product.id}
+              {...product}
+              onClick={() => onSelectProduct(product)} 
+            />
+          ))
+        }
+      </div>
     </div>
   );
 };
