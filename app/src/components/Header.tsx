@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaPlus, FaClipboardList } from "react-icons/fa";
 import { LuPackagePlus } from "react-icons/lu";
-import { FiPackage } from "react-icons/fi";
 import AddProductModal from "./AddProductModal";
 import CreateBatchForm from "./CreateBatchForm";
 import Image from "next/image";
@@ -33,7 +32,6 @@ export default function Header({ cart, onCartClick }: HeaderProps) {
   return (
     <header className="fixed top-0 left-0 w-full bg-blue-500 p-4 shadow-md z-50">
       <div className="flex items-center justify-between w-full max-w-4xl mx-auto px-4">
-        {/* Logo */}
         <Link href="/" passHref>
           <button className="flex items-center">
             <Image src="/icon.png" alt="Farmacorp Logo" width={100} height={50} />

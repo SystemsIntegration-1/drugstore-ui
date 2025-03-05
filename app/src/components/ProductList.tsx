@@ -1,7 +1,6 @@
 import React from "react";
 import ProductCard from "./ProductCard";
 
-
 interface Product {
   id: string;
   name: string;
@@ -15,7 +14,7 @@ interface Product {
 
 interface ProductListProps {
   products: Product[];
-  onSelectProduct: (product: Product) => void; // Esta función espera un Product con todas las propiedades
+  onSelectProduct: (product: Product) => void;
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products, onSelectProduct }) => {

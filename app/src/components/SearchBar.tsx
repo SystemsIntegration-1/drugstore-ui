@@ -14,8 +14,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   const handleSearchClick = () => {
-    console.log("Buscando:", search); // Verifica que el término de búsqueda se capture correctamente
-    onSearch(search); // Llamar la función para pasar el término de búsqueda
+    console.log("Buscando:", search); 
+    onSearch(search); 
   };
 
   return (

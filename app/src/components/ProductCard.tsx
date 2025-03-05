@@ -7,7 +7,7 @@ interface ProductProps {
   category: string;
   warehouseLocation: string;
   sharedId: string; 
-  price: number;  // Nuevo campo para el precio
+  price: number; 
   onClick: () => void;
 }
 

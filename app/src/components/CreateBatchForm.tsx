@@ -19,7 +19,6 @@ export default function CreateBatchForm({ onClose }: CreateBatchFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Convertir las fechas a milisegundos (long)
     const entryDateMillis = new Date(formData.entryDate).getTime();
     const expirationDateMillis = new Date(formData.expirationDate).getTime();
 
@@ -39,16 +38,12 @@ export default function CreateBatchForm({ onClose }: CreateBatchFormProps) {
       });
 
       if (response.ok) {
-        // Llamar a onClose para cerrar el modal después de enviar
         onClose();
-        // Opcional: Mostrar un mensaje de éxito o hacer algo con la respuesta
         console.log("Lote creado exitosamente");
       } else {
-        // Manejar errores en la respuesta del servidor
         console.error("Error al crear el lote", response.statusText);
       }
     } catch (error) {
-      // Manejar cualquier error de red
       console.error("Error de red:", error);
     }
   };

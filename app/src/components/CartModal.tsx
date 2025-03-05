@@ -1,17 +1,17 @@
 import React from "react";
 import { FaTimes, FaRegTrashAlt } from "react-icons/fa";
-import { createOrder } from "../services/orderService"; 
 
 interface CartModalProps {
   cart: {
     id: string;
     name: string;
-    price: number; 
+    price: number;
     quantity: number;
   }[];
   onClose: () => void;
   onUpdateCart: (id: string, quantity: number) => void;
   onRemoveFromCart: (id: string) => void;
+  onClearCart: () => void; 
 }
 
 const CartModal: React.FC<CartModalProps> = ({
@@ -19,8 +19,9 @@ const CartModal: React.FC<CartModalProps> = ({
   onClose,
   onUpdateCart,
   onRemoveFromCart,
+  onClearCart, 
 }) => {
-  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0); 
+  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const order = {
     productQuantities: cart.reduce((acc, item) => {
@@ -32,11 +33,25 @@ const CartModal: React.FC<CartModalProps> = ({
 
   const handleOrder = async () => {
     try {
-      const data = await createOrder(order);
-      console.log("Order created successfully:", data);
+      const response = await fetch('http://localhost:5027/api/Order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': '*/*',
+        },
+        body: JSON.stringify(order),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al crear la orden");
+      }
+
+      const data = await response.json();
+      console.log("Orden creada con éxito:", data);
       onClose(); 
+      onClearCart(); 
     } catch (error) {
-      console.error("Error creating order:", error);
+      console.error("Error creando la orden:", error);
     }
   };
 
@@ -58,7 +73,7 @@ const CartModal: React.FC<CartModalProps> = ({
               <li key={item.id} className="flex items-center space-x-4 border-b py-2">
                 <div>
                   <h3 className="font-bold">{item.name}</h3>
-                  <p className="text-gray-600">BOB{item.price}</p> 
+                  <p className="text-gray-600">BOB{item.price}</p>
                   <div className="flex items-center space-x-2">
                     <button
                       className="px-2 py-1 bg-gray-300 rounded"

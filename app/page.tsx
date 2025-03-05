@@ -1,11 +1,11 @@
-"use client"; // Añadir esta línea al principio del archivo
+"use client"; 
 
 import { useState } from "react";
 import Header from "./src/components/Header";
 import ProductList from "./src/components/ProductList";
 import ProductDetail from "./src/components/ProductDetails";
 import CartModal from "./src/components/CartModal";
-import SearchBar from "./src/components/SearchBar"; // Importamos el componente SearchBar
+import SearchBar from "./src/components/SearchBar"; 
 
 interface Product {
   id: string;
@@ -24,7 +24,6 @@ export default function Home() {
   const [cart, setCart] = useState<{ id: string; name: string; price: number; quantity: number }[]>([]);
   const [showCart, setShowCart] = useState<boolean>(false);
 
-  // Función para buscar productos desde la API
   const searchProducts = (query: string) => {
     if (query.trim() === "") {
       setProducts([]); 
@@ -72,15 +71,16 @@ export default function Home() {
     setCart(cart.filter((item) => item.id !== id));
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
     <div className="min-h-screen pt-16">
-      {/* Header */}
       <Header cart={cart} onCartClick={() => setShowCart(true)}  />
 
-      {/* Componente de búsqueda */}
       <SearchBar onSearch={searchProducts} />
 
-      {/* Centrado de los productos */}
       <div className="flex justify-center mt-8">
         <ProductList
           products={products}
@@ -102,6 +102,7 @@ export default function Home() {
           onClose={() => setShowCart(false)}
           onUpdateCart={updateCartQuantity}
           onRemoveFromCart={removeFromCart}
+          onClearCart={clearCart} 
         />
       )}
     </div>
