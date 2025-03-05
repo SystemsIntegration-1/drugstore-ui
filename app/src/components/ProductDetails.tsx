@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import EditProductModal from "./EditProductModal";
+import SearchBranchModal from "./SearchBranchModal";
+import DisplayBranchInfoModal from "./DisplayBranchInfoModal";
+import OrderInventoryModal from "./OrderInventoryModal";  
+import OrderResponseModal from "./OrderResponseModal";  
 
 interface ProductDetailProps {
   product: { 
@@ -27,6 +31,16 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProductDetailOpen, setIsProductDetailOpen] = useState(true);
+  const [isBranchModalOpen, setIsBranchModalOpen] = useState(false);
+  const [isBranchInfoModalOpen, setIsBranchInfoModalOpen] = useState(false);
+  const [isOrderInventoryModalOpen, setIsOrderInventoryModalOpen] = useState(false);
+  const [isOrderResponseModalOpen, setIsOrderResponseModalOpen] = useState(false); 
+  const [branchData, setBranchData] = useState({
+    branchId: "",
+    medId: "",
+    amount: 0,
+  });
+  const [orderData, setOrderData] = useState<{ productId: string; quantity: number } | null>(null);
 
   const openModal = () => {
     setIsProductDetailOpen(false);
@@ -36,6 +50,48 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   const closeModal = () => {
     setIsModalOpen(false);
     setIsProductDetailOpen(true);
+  };
+
+  const openBranchModal = () => {
+    setIsBranchModalOpen(true);
+  };
+
+  const closeBranchModal = () => {
+    setIsBranchModalOpen(false);
+  };
+
+  const openBranchInfoModal = () => {
+    setIsBranchInfoModalOpen(true);
+  };
+
+  const closeBranchInfoModal = () => {
+    setIsBranchInfoModalOpen(false);
+  };
+
+  const openOrderInventoryModal = () => {
+    setIsOrderInventoryModalOpen(true);
+  };
+
+  const closeOrderInventoryModal = () => {
+    setIsOrderInventoryModalOpen(false);
+  };
+
+  const openOrderResponseModal = () => {
+    setIsOrderResponseModalOpen(true);
+  };
+
+  const closeOrderResponseModal = () => {
+    setIsOrderResponseModalOpen(false);
+  };
+
+  const handleBranchSubmit = (branchId: string, medId: string, amount: number) => {
+    setBranchData({ branchId, medId, amount });
+    openBranchInfoModal();
+  };
+
+  const handleOrder = (orderData: { productId: string, quantity: number }) => {
+    setOrderData(orderData);
+    openOrderResponseModal();
   };
 
   if (!product) return null;
@@ -67,14 +123,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
               </button>
 
               <button
-                onClick={onOrderInventory}
+                onClick={openOrderInventoryModal}
                 className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
               >
                 Ordenar al inventario
               </button>
 
               <button
-                onClick={onSearchBranch}
+                onClick={openBranchModal}
                 className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
               >
                 Buscar en otra sucursal
@@ -92,6 +148,32 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
       )}
 
       {isModalOpen && <EditProductModal productId={product.id} onClose={closeModal} />}
+      {isBranchModalOpen && (
+        <SearchBranchModal onClose={closeBranchModal} onSubmit={handleBranchSubmit} />
+      )}
+      {isBranchInfoModalOpen && (
+        <DisplayBranchInfoModal
+          branchId={branchData.branchId}
+          medId={branchData.medId}
+          amount={branchData.amount}
+          onClose={closeBranchInfoModal}
+        />
+      )}
+      
+      {isOrderInventoryModalOpen && (
+        <OrderInventoryModal 
+          isOpen={isOrderInventoryModalOpen} 
+          onClose={closeOrderInventoryModal} 
+          onOrder={handleOrder} 
+        />
+      )}
+      {isOrderResponseModalOpen && (
+        <OrderResponseModal 
+          isOpen={isOrderResponseModalOpen} 
+          orderData={orderData} 
+          onClose={closeOrderResponseModal} 
+        />
+      )}
     </>
   );
 };

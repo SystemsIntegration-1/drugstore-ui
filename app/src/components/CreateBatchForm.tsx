@@ -39,9 +39,6 @@ export default function CreateBatchForm({ onClose }: CreateBatchFormProps) {
 
       if (response.ok) {
         onClose();
-        console.log("Lote creado exitosamente");
-      } else {
-        console.error("Error al crear el lote", response.statusText);
       }
     } catch (error) {
       console.error("Error de red:", error);
